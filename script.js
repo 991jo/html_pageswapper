@@ -3,8 +3,8 @@ passive = document.getElementById("iframe2")
 position = 0;
 list = []
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+async function sleep(ms) {
+	await new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
@@ -16,7 +16,7 @@ function swap_iframe(){
 	active = temp;
 }
 
-async function load_list(callback){
+function load_list(callback){
 	while(true){
 		var json_file = new XMLHttpRequest();
 		json_file.open("GET","data.json",false)
@@ -29,7 +29,7 @@ async function load_list(callback){
 				break;
 			} catch (error){
 				console.log(error)
-				await sleep(1000);
+				sleep(1000);
 			}
 		}
 	}
@@ -46,11 +46,7 @@ function build_iframe(){
 }
 
 async function setup(){
-	await load_list();
-	setup2();
-}
-
-function setup2(){
+	load_list();
 	position = 0;
 	build_iframe();
 	swap_iframe();
@@ -60,12 +56,9 @@ function setup2(){
 }
 
 
-async function update(){
+function update(){
 	swap_iframe();
-	await load_list();
-	update2();
-}
-function update2(){
+	load_list();
 	build_iframe();
 	setTimeout(update, list[position].displaytime)
 	position++;
